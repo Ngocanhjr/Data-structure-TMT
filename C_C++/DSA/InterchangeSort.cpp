@@ -1,4 +1,17 @@
 #include <stdio.h>
+/*
+2 5 7 3 2 1 8 
+
+    1 5 7 3 2 2 8
+    1 3 7 5 2 2 8
+    1 2 7 5 3 2 8
+    1 2 5 7 3 2 8
+    1 2 3 7 5 2 8
+    1 2 2 7 5 3 8
+    1 2 2 5 7 3 8
+    1 2 2 3 7 5 8
+    1 2 2 3 5 7 8
+*/
 
 void interchangeSort(int a[], int n);
 void swap (int *a, int *b);
@@ -11,7 +24,7 @@ int main (){
     interchangeSort(arr,x);
 //   int a = 1, b=2;
 //    swap(&a,&b);
-//    printf("%d %d", a, b);
+//    printf("%d %d", a, b);     
     printf("\n");
     getArray(arr, x);
 }
@@ -25,6 +38,8 @@ void interchangeSort (int a[], int n){
         for ( int j = i + 1; j < n; j++){
             if (a[j]<a[i]){
                 swap(&a[i],&a[j]);
+                getArray(a, n);
+                printf("\n");
             }
         }
     }
