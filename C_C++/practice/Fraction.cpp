@@ -10,8 +10,8 @@ typedef struct
 Fraction read ();
 void display (Fraction p);
 int gcd (int a, int b);
-void irreducibleFraction (Fraction &p);
-Fraction reduce (Fraction ps);
+void reduce (Fraction &p);
+//Fraction reduce (Fraction ps);
 Fraction add( Fraction ps1, Fraction ps2);
 Fraction subtract( Fraction ps1, Fraction ps2);
 Fraction multiply( Fraction ps1, Fraction ps2);
@@ -41,21 +41,7 @@ int main (){
    display(div);
    printf("----------------------------------------------------");
 }
-Fraction read (){
-   Fraction ps;
-   printf("Please enter new fraction: ");
-   scanf ("%d", &ps.numerator);
- 
-   scanf ("%d", &ps.denominator);
-   return ps;
-}
-void display (Fraction p){
-   if(p.denominator==1){
-      printf("%d\n",p.numerator);
-   } else{
-      printf ("%d/%d\n", p.numerator, p.denominator);
-   }
-}
+
 int gcd (int a, int b){
    a = abs(a);
    b = abs(b);
@@ -66,36 +52,61 @@ int gcd (int a, int b){
    }
    return a;
 }
-void irreducibleFraction (Fraction &p){
+void reduce (Fraction &p){
    int tempGcd = gcd (p.numerator, p.denominator);
    p.numerator = p.numerator / tempGcd;
    p.denominator = p.denominator / tempGcd;
 }
+Fraction read (){
+   Fraction ps;
+   do {
+      printf("Please enter new fraction: ");
+      scanf ("%d", &ps.numerator);
+      scanf ("%d", &ps.denominator);
+      if(ps.denominator == 0){
+         printf ("ERROR! Please enter fraction again!\n");
+      }
+   } while (ps.denominator == 0);
+   reduce(ps);
+   return ps;
+}
+void display (Fraction p){
+   if(p.denominator < 0) {
+      p.numerator = (-p.numerator);
+      p.denominator = (-p.denominator);
+   }
+   if(p.denominator==1){
+      printf("%d\n",p.numerator);
+   } else{
+      printf ("%d/%d\n", p.numerator, p.denominator);
+   }
+}
+
 Fraction add( Fraction ps1, Fraction ps2){
    Fraction newFraction;
    newFraction.numerator = (ps1.numerator*ps2.denominator + ps2.numerator*ps1.denominator);
    newFraction.denominator = (ps1.denominator*ps2.denominator);
-   irreducibleFraction(newFraction);
+   reduce(newFraction);
    return newFraction;
 }
 Fraction subtract( Fraction ps1, Fraction ps2){
    Fraction newFraction;
    newFraction.numerator = (ps1.numerator*ps2.denominator - ps2.numerator*ps1.denominator);
    newFraction.denominator = (ps1.denominator*ps2.denominator);
-   irreducibleFraction(newFraction);
+   reduce(newFraction);
    return newFraction;
 }
 Fraction multiply( Fraction ps1, Fraction ps2){
    Fraction newFraction;
    newFraction.numerator = (ps1.numerator*ps2.numerator);
    newFraction.denominator = (ps1.denominator*ps2.denominator);
-   irreducibleFraction(newFraction);
+   reduce(newFraction);
    return newFraction;
 }
 Fraction divide( Fraction ps1, Fraction ps2){
    Fraction newFraction;
    newFraction.numerator = (ps1.numerator*ps2.denominator);
    newFraction.denominator = (ps1.denominator*ps2.numerator);
-   irreducibleFraction(newFraction);
+   reduce(newFraction);
    return newFraction;
 }
