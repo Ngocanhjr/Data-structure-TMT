@@ -1,148 +1,99 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#define MAX_DIGITS 1000 //Lenght of number can input
 
-#define MAX_DIGITS 1000
+typedef struct
+{
+    char *numbers; // Pointer to store array of digit
+    int length;   // Length of the number
+} BigInt;
 
-// Function to input a large number as a string and convert it to an array of digits
-void inputBigInt(char num[], int digits[], int *len) {
-    *len = strlen(num);
-    for (int i = 0; i < *len; i++) {
-        digits[i] = num[*len - i - 1] - '0';  // Store digits in reverse order
+BigInt read();
+void display(BigInt a);
+int isNegativeNumber (BigInt a);
+void reverse (BigInt &a);
+
+BigInt add (BigInt a, BigInt b){
+    if(isNegativeNumber(a)){
+        printf("a is negative number\n");
+    } else {
+        printf("a is positive number\n");
     }
+    if(isNegativeNumber(b)){
+        printf("b is negative number\n");
+    } else{
+        printf("b is positive number\n");
+    }
+    BigInt result;
+    result.numbers = (char*)malloc(sizeof(char)*(a.length>b.length? a.length + 1:b.length + 1)); // 1 is store digit when lenght of result larger then origin a, b number
+    int lenMax = a.length;
+    if(a.length < b.length){
+        lenMax = b.length;
+    }
+    int carry = 0, idxResult =0;
+    for (int i = a.length - 1, j = b.length - 1; i >= 0 || j >=0; i--, j--, idxResult++){
+        int aDigit = i >= 0 ? a.numbers[i] - 48 : 0; // -48 convert to natural number
+        int bDigit = j >= 0 ? b.numbers[j] - 48 : 0;
+        int sumOfDigit = aDigit + bDigit + carry;
+        carry = sumOfDigit > 9 ? 1 : 0;
+        result.numbers [idxResult] = sumOfDigit%10 + 48; //+46 48 convert to ascii
+    }
+    if (carry){
+        result.numbers[idxResult] = '1';
+        lenMax++;
+    }
+    //update memory store number
+    result.length = lenMax;
+    result.numbers[lenMax] = '\0';
+    printf ("%s\n", result.numbers);
+    reverse(result);
+    printf ("%s", result.numbers);
+    return result;
+}
+BigInt substract (BigInt a, BigInt b){
+
 }
 
+int main (){
+    BigInt a = read();
+    display (a);
+    BigInt b = read();
+    display (b);
+    BigInt ad = add(a,b);
 
-// Function to print the big integer
-void printBigInt(int digits[], int len) {
-    for (int i = len - 1; i >= 0; i--) {
-        printf("%d", digits[i]);
-    }
-    printf("\n");
 }
-
-// Function to add two large integers
-void addBigInt(int a[], int a_len, int b[], int b_len, int result[], int *res_len) {
-    int carry = 0, i;
-    *res_len = (a_len > b_len) ? a_len : b_len;
-
-    for (i = 0; i < *res_len; i++) {
-        int sum = (i < a_len ? a[i] : 0) + (i < b_len ? b[i] : 0) + carry;
-        result[i] = sum % 10;
-        carry = sum / 10;
+int isNegativeNumber (BigInt a){
+    if(a.numbers[0] == '-'){
+        return 1;
     }
-
-    if (carry) {
-        result[i] = carry;
-        (*res_len)++;
-    }
-}
-void subtractBigInt(int a[], int a_len, int b[], int b_len, int result[], int *res_len) {
-    int borrow = 0, i;
-    *res_len = a_len;
-
-    for (i = 0; i < *res_len; i++) {
-        int diff = a[i] - (i < b_len ? b[i] : 0) - borrow;
-        if (diff < 0) {
-            diff += 10;
-            borrow = 1;
-        } else {
-            borrow = 0;
-        }
-        result[i] = diff;
-    }
-
-    // Adjust result length by removing leading zeros
-    while (*res_len > 1 && result[*res_len - 1] == 0) {
-        (*res_len)--;
-    }
-}
-void multiplyBigInt(int a[], int a_len, int b[], int b_len, int result[], int *res_len) {
-    int i, j;
-    *res_len = a_len + b_len;
-
-    // Initialize result array
-    for (i = 0; i < *res_len; i++) {
-        result[i] = 0;
-    }
-
-    for (i = 0; i < a_len; i++) {
-        int carry = 0;
-        for (j = 0; j < b_len; j++) {
-            int prod = a[i] * b[j] + result[i + j] + carry;
-            result[i + j] = prod % 10;
-            carry = prod / 10;
-        }
-        result[i + j] += carry;
-    }
-
-    // Adjust result length by removing leading zeros
-    while (*res_len > 1 && result[*res_len - 1] == 0) {
-        (*res_len)--;
-    }
-}
-void divideBigInt(int a[], int a_len, int divisor, int result[], int *res_len, int *remainder) {
-    int i, temp = 0;
-    *res_len = a_len;
-
-    for (i = a_len - 1; i >= 0; i--) {
-        temp = temp * 10 + a[i];
-        result[i] = temp / divisor;
-        temp %= divisor;
-    }
-
-    while (*res_len > 1 && result[*res_len - 1] == 0) {
-        (*res_len)--;
-    }
-
-    *remainder = temp;
-}
-int main() {
-    char num1[MAX_DIGITS], num2[MAX_DIGITS];
-    int a[MAX_DIGITS], b[MAX_DIGITS], result[MAX_DIGITS];
-    int a_len, b_len, res_len;
-
-    // Input two large integers as strings
-    printf("Enter the first large integer: ");
-    scanf("%s", num1);
-    printf("Enter the second large integer: ");
-    scanf("%s", num2);
-
-    // Convert them to arrays of digits
-    inputBigInt(num1, a, &a_len);
-    inputBigInt(num2, b, &b_len);
-
-    // Add the two big integers
-    addBigInt(a, a_len, b, b_len, result, &res_len);
-
-    // Print the result
-    printf("Sum: ");
-    printBigInt(result, res_len);
-
-    subtractBigInt(a, a_len, b, b_len, result, &res_len);
-
-    // Print the result
-    printf("Difference: ");
-    printBigInt(result, res_len);
-
-    multiplyBigInt(a, a_len, b, b_len, result, &res_len);
-
-    // Print the result
-    printf("Product: ");
-    printBigInt(result, res_len);
-
-    int divisor, remainder;
-
-    // Input divisor (single-digit for simplicity)
-    printf("Enter a single-digit divisor: ");
-    scanf("%d", &divisor);
-
-     divideBigInt(a, a_len, divisor, result, &res_len, &remainder);
-
-    // Print the result
-    printf("Quotient: ");
-    printBigInt(result, res_len);
-    printf("Remainder: %d\n", remainder);
-
-
     return 0;
+}
+void reverse (BigInt &a){
+    for (int i = 0; i < a.length/2; i++){
+        char temp = a.numbers[i];
+        a.numbers[i] = a.numbers[a.length - i - 1];
+        a.numbers[a.length - i - 1] = temp;
+    } 
+}
+BigInt read(){
+    char numberArray[MAX_DIGITS]; //Array store number when input
+    printf("Enter new numbers: ");
+    scanf ("%s",numberArray);
+    // fgets(num, MAX_DIGITS, stdin);
+    // if (num[strlen(num) - 1] == '\n')
+    //     num[strlen(num) - 1] = '\0';
+    int sizeOfNumberArray = strlen(numberArray);
+//    printf("%d", sizeOfNumberArray);
+    BigInt newBigNumber;
+    newBigNumber.length = sizeOfNumberArray;
+    newBigNumber.numbers = (char *)malloc(sizeOfNumberArray*sizeof(char));
+    strcpy(newBigNumber.numbers, numberArray);
+    return newBigNumber;
+}
+void display(BigInt a){
+    int len = a.length;
+    printf("Number:%*s\n", 12 + len, a.numbers); //format when print (12: distinct "Number:            ")
+//    printf ("%d", len);
+    
 }
