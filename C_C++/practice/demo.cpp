@@ -29,16 +29,26 @@ BigInt initSubtract(BigInt a, BigInt b);
 
 BigInt subtract(BigInt a, BigInt b);
 
+BigInt copyBigInt(BigInt a)
+{
+    BigInt copy;
+    copy.numbers = (char *)malloc(strlen(a.numbers) + 1);
+    strcpy(copy.numbers, a.numbers);
+    copy.length = a.length;
+    return copy;
+}
+
+
 int main()
 {
     BigInt a = read();
     display(a);
     BigInt b = read();
     display(b);
-    //    BigInt ad = initAdd(a, b);
+    BigInt ad = initAdd(a, b);
     BigInt sub = initSubtract(a, b);
     printf("----------------------------------\n");
-    //    printf("a + b = %s\n", ad.numbers);
+    printf("a + b = %s\n", ad.numbers);
     printf("a - b = %s\n", sub.numbers);
 }
 
@@ -83,12 +93,8 @@ BigInt read()
 {
     char numberArray[MAX_DIGITS]; // Array store number when input
     printf("Enter new numbers: ");
-    scanf("%s", numberArray);
-    // fgets(num, MAX_DIGITS, stdin);
-    // if (num[strlen(num) - 1] == '\n')
-    //     num[strlen(num) - 1] = '\0';
+    scanf("%s", numberArray);  
     int sizeOfNumberArray = strlen(numberArray);
-    //    printf("%d", sizeOfNumberArray);
     BigInt newBigNumber;
     newBigNumber.length = sizeOfNumberArray;
     newBigNumber.numbers = (char *)malloc(sizeOfNumberArray * sizeof(char));
@@ -105,6 +111,8 @@ void display(BigInt a)
 
 BigInt initAdd(BigInt a, BigInt b)
 {
+    a = copyBigInt(a);
+    b = copyBigInt(b);
     BigInt result;
     result.numbers = (char *)malloc(sizeof(char) * (a.length > b.length ? a.length + 1 : b.length + 1)); // 1 is store digit when length of result larger then origin a, b number
     // case: a or b is negative
@@ -161,6 +169,8 @@ BigInt add(BigInt a, BigInt b)
 
 BigInt initSubtract(BigInt a, BigInt b)
 {
+    a = copyBigInt(a);
+    b = copyBigInt(b);
     BigInt result;
     result.numbers = (char *)malloc(sizeof(char) * (a.length > b.length ? a.length + 1 : b.length + 1));
     // Case: a - (-b) = a + b
