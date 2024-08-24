@@ -35,10 +35,10 @@ int main()
     display(a);
     BigInt b = read();
     display(b);
-    //    BigInt ad = initAdd(a, b);
+    BigInt ad = initAdd(a, b);
     BigInt sub = initSubtract(a, b);
     printf("----------------------------------\n");
-    //    printf("a + b = %s\n", ad.numbers);
+    printf("a + b = %s\n", ad.numbers);
     printf("a - b = %s\n", sub.numbers);
 }
 
@@ -236,7 +236,7 @@ BigInt subtract(BigInt a, BigInt b)
             }
         }
     }
-    if (a.length < b.length)
+    else if (a.length < b.length)
     {
         if (!aNegative)
             isNewNumberNegative = 1;

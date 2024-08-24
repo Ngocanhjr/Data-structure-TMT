@@ -13,6 +13,8 @@ BigInt read();
 
 void display(BigInt a);
 
+BigInt initAdd(BigInt a, BigInt b);
+
 int isNegativeNumber(BigInt a);
 
 void reverse(BigInt &a);
@@ -20,14 +22,76 @@ void reverse(BigInt &a);
 void addSpace(BigInt &a);
 
 void swap(BigInt *a, BigInt *b);
-
-BigInt initAdd(BigInt a, BigInt b);
-
+ 
 BigInt add(BigInt a, BigInt b); // handle addition normal logic
 
 BigInt initSubtract(BigInt a, BigInt b);
 
 BigInt subtract(BigInt a, BigInt b);
+
+void updateSpace(BigInt &a, int &check);
+
+BigInt copyBigInt(BigInt a);
+
+int main()
+{
+    BigInt a = read();
+    //    display(a);
+    BigInt b = read();
+    //    display(b);
+    BigInt ad = initAdd(a, b);
+    BigInt sub = initSubtract(a, b);
+    //    printf("----------------------------------\n");
+    printf("%s\n", ad.numbers);
+    printf("%s\n", sub.numbers);
+}
+
+int isNegativeNumber(BigInt a)
+{
+    if (a.numbers[0] == '-')
+        return 1;
+    return 0;
+}
+
+void swap(BigInt *a, BigInt *b)
+{
+    BigInt temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void reverse(BigInt &a)
+{
+    for (int i = 1; i <= (a.length + 1) / 2; i++)
+    {
+        char temp = a.numbers[i];
+        a.numbers[i] = a.numbers[a.length - i + 1];
+        a.numbers[a.length - i + 1] = temp;
+    }
+    while (a.numbers[1] == '0'){
+        for (int j = 1; j < a.length; j++)
+        {
+            a.numbers[j] = a.numbers[j+1];
+        }
+        a.numbers[a.length] = '\n';
+        a.length--;
+}
+  
+    
+}
+
+BigInt read()
+{
+    char numberArray[MAX_DIGITS]; // Array store number when input
+                                  //    printf("Enter new numbers: ");
+    scanf("%s", numberArray);
+    int sizeOfNumberArray = strlen(numberArray);
+    BigInt newBigNumber;
+    newBigNumber.length = sizeOfNumberArray;
+    newBigNumber.numbers = (char *)malloc(sizeOfNumberArray * sizeof(char));
+    strcpy(newBigNumber.numbers, numberArray);
+    return newBigNumber;
+}
 
 BigInt copyBigInt(BigInt a)
 {
@@ -38,75 +102,10 @@ BigInt copyBigInt(BigInt a)
     return copy;
 }
 
-
-int main()
-{
-    BigInt a = read();
-    display(a);
-    BigInt b = read();
-    display(b);
-    BigInt ad = initAdd(a, b);
-    BigInt sub = initSubtract(a, b);
-    printf("----------------------------------\n");
-    printf("a + b = %s\n", ad.numbers);
-    printf("a - b = %s\n", sub.numbers);
-}
-
-int isNegativeNumber(BigInt a)
-{
-    if (a.numbers[0] == '-')
-    {
-        return 1;
-    }
-    return 0;
-}
-
-void swap(BigInt *a, BigInt *b)
-{
-    BigInt temp = *a;
-    *a = *b;
-    *b = temp;
-}
-void reverse(BigInt &a)
-{
-    for (int i = 1; i <= (a.length + 1) / 2; i++)
-    {
-        char temp = a.numbers[i];
-        a.numbers[i] = a.numbers[a.length - i + 1];
-        a.numbers[a.length - i + 1] = temp;
-    }
-}
-void addSpace(BigInt &a)
-{
-    for (int i = a.length + 1; i >= 0; i--)
-    {
-        // char temp = a.numbers[i];
-        a.numbers[i] = a.numbers[i - 1];
-    }
-    a.numbers[0] = ' ';
-    a.numbers[a.length + 2] = '\0';
-}
-// 0 1 2 3 4 5 6 7
-// 1 2 3 4 5 6 \n
-
-BigInt read()
-{
-    char numberArray[MAX_DIGITS]; // Array store number when input
-    printf("Enter new numbers: ");
-    scanf("%s", numberArray);  
-    int sizeOfNumberArray = strlen(numberArray);
-    BigInt newBigNumber;
-    newBigNumber.length = sizeOfNumberArray;
-    newBigNumber.numbers = (char *)malloc(sizeOfNumberArray * sizeof(char));
-    strcpy(newBigNumber.numbers, numberArray);
-    return newBigNumber;
-}
-
 void display(BigInt a)
 {
     int len = a.length;
     printf("Number:%*s\n", 12 + len, a.numbers); // format when print (12 is length of "Number:            ")
-    //    printf ("Length of number: %d", len);
 }
 
 BigInt initAdd(BigInt a, BigInt b)
@@ -160,10 +159,7 @@ BigInt add(BigInt a, BigInt b)
     // update array number
     newNumber.length = lenMax;
     newNumber.numbers[lenMax + 1] = '\0';
-    printf("Sum: \n");
-    printf("%s\n", newNumber.numbers);
     reverse(newNumber);
-    printf("%s\n", newNumber.numbers);
     return newNumber;
 }
 
@@ -175,7 +171,7 @@ BigInt initSubtract(BigInt a, BigInt b)
     result.numbers = (char *)malloc(sizeof(char) * (a.length > b.length ? a.length + 1 : b.length + 1));
     // Case: a - (-b) = a + b
     if (!isNegativeNumber(a) && isNegativeNumber(b))
-    { 
+    {
         result = add(a, b);
         result.numbers[0] = ' ';
         return result;
@@ -199,54 +195,30 @@ BigInt subtract(BigInt a, BigInt b)
     newNumber.numbers = (char *)malloc(sizeof(char) * (a.length > b.length ? a.length + 1 : b.length + 1));
     int lenMax = a.length > b.length ? a.length : b.length;
     int borrow = 0, idxNewNumber = 1;
-    int isNewNumberNegative = 0;
-    int aNegative = 0;
-    int bNegative = 0;
-    if (isNegativeNumber(a))
-    {
-        aNegative = 1;
-        //        a.length = a.length - 1;
-        a.numbers[0] = ' ';
-    }
-    else
-    {
-        addSpace(a);
-        a.length++;
-    }
-    if (isNegativeNumber(b))
-    {
-        bNegative = 1;
-        //        b.length = b.length - 1;
-        b.numbers[0] = ' ';
-    }
-    else
-    {
-        addSpace(b);
-        b.length++;
-    }
+    int isNewNumberNegative = 0, aNegative = 0, bNegative = 0;
+    updateSpace(a, aNegative);
+    updateSpace(b, bNegative);
     if (a.length == b.length)
     {
-        if (strcmp(a.numbers, b.numbers) == 0)
-        {
-            strcpy(newNumber.numbers, "0");
-            newNumber.length = 1;
-            return newNumber;
-        }
         if (strcmp(a.numbers, b.numbers) < 0)
         {
             if (!aNegative)
                 isNewNumberNegative = 1;
             swap(&a, &b);
         }
-        else
+        else if (strcmp(a.numbers, b.numbers) > 0)
         {
             if (aNegative)
-            {
                 isNewNumberNegative = 1;
-            }
+        }
+        else
+        {
+            strcpy(newNumber.numbers, " 0");
+            newNumber.length = 1;
+            return newNumber;
         }
     }
-    if (a.length < b.length)
+    else if (a.length < b.length)
     {
         if (!aNegative)
             isNewNumberNegative = 1;
@@ -293,24 +265,25 @@ BigInt subtract(BigInt a, BigInt b)
     // update array number
     newNumber.length = lenMax;
     newNumber.numbers[lenMax + 1] = '\0';
-    printf("Subtract: \n");
-    printf("%s\n", newNumber.numbers);
     reverse(newNumber);
-    printf("%s\n", newNumber.numbers);
     return newNumber;
 }
+void updateSpace(BigInt &a, int &check)
+{
+    if (isNegativeNumber(a))
+    {
+        check = 1;
+        a.numbers[0] = ' ';
+    }
+    else
+    {
+        for (int i = a.length + 1; i >= 0; i--)
+            {
+                a.numbers[i] = a.numbers[i - 1];
+            }
+        a.numbers[0] = ' ';
+        a.numbers[a.length + 2] = '\0';
+        a.length++;
+    }
+}
 
-/*
-(a>b)
-(-a) - (-b) = -a + b = b - a => negative
-a - b => positive
--a + b => negative
-a + (-b) => positive
-=> negative
-(b > a)
-đổi chỗ
-(-a) - (-b) = -a + b = b - a => positive
-a - b => negative
-a + (-b) => negative
--a + b => positive
-*/
