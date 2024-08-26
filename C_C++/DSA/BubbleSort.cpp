@@ -19,10 +19,13 @@ void  swap (int &a ,int &b);
 void disPlay(int a[], int n);
 int main (){
     int n = 10;
-    int a[n] = { 1, 5, 4, 6, 7, 2, 0};
+    int a[] = { 1, 2, 4, 6, 5};
+    n = sizeof(a)/sizeof(int);
+   // int a[n] = { 1, 5, 4, 6, 7, 2, 0};
     disPlay(a,n);
     printf("\n");
-    bubbleSort(a,n);
+    bubbleSort(a,n);    
+    disPlay(a,n);
 }
 void disPlay (int a[], int n){
      for ( int i = 0; i < n; i++){
@@ -37,7 +40,7 @@ void  swap (int &a ,int &b){
 void bubbleSort (int a[], int n){
     for ( int i = 0; i < n  ; i++){
         int isSorted = 1;
-        for ( int j = 0; j < n - i - j; j ++ ){ //j - 1 < n - i => j < n - i - 1
+        for ( int j = 0; j < n - i - 1; j ++ ){ //j - 1 < n - i => j < n - i - 1
             if (a[j] > a [j + 1]){ // đưa số lớn ra sau
                 isSorted = 0;
                 swap ( a[j], a[j + 1]);

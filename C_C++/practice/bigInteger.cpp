@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #define MAX_DIGITS 1000 // Length of number can input
-//Main
+
 typedef struct
 {
     char *numbers; // Pointer to store array of digit
@@ -55,14 +55,15 @@ BigInt read()
 {
     int checkOutput = 1;
     BigInt newBigNumber;
-    do {
-    char numberArray[MAX_DIGITS]; // Array store number when input
-    printf("Enter new numbers: ");
-    scanf("%s", numberArray);
-    newBigNumber.length = strlen(numberArray);
-    newBigNumber.numbers = (char *)malloc(strlen(numberArray) * sizeof(char));
-    strcpy(newBigNumber.numbers, numberArray);
-    checkOutput = isNumber(newBigNumber);
+    do
+    {
+        char numberArray[MAX_DIGITS]; // Array store number when input
+        printf("Enter new numbers: ");
+        scanf("%s", numberArray);
+        newBigNumber.length = strlen(numberArray);
+        newBigNumber.numbers = (char *)malloc(strlen(numberArray) * sizeof(char));
+        strcpy(newBigNumber.numbers, numberArray);
+        checkOutput = isNumber(newBigNumber);
     } while (!checkOutput);
     return newBigNumber;
 }
@@ -172,12 +173,12 @@ BigInt subtract(BigInt a, BigInt b)
     int newNegativeNumber = 0, aNegative = 0, bNegative = 0;
     updateSpace(a, aNegative);
     updateSpace(b, bNegative);
-    if (a.length > b.length) //case: (-a) - (-b) = -a + b
+    if (a.length > b.length) // case: (-a) - (-b) = -a + b
     {
         if (aNegative)
             newNegativeNumber = 1;
     }
-    else if (a.length < b.length) //case: a - b = a + (-b) = -b + a
+    else if (a.length < b.length) // case: a - b = a + (-b) = -b + a
     {
         if (!aNegative)
             newNegativeNumber = 1;
@@ -210,7 +211,7 @@ BigInt subtract(BigInt a, BigInt b)
         int subOfNumber = aDigit - bDigit - borrow;
         if (subOfNumber < 0)
         {
-            newNumber.numbers[idxNewNumber] = subOfNumber + 10 + 48; //48 is different between ASCII and natural number
+            newNumber.numbers[idxNewNumber] = subOfNumber + 10 + 48; // 48 is different between ASCII and natural number
             borrow = 1;
         }
         else
@@ -256,10 +257,11 @@ void reverse(BigInt &a)
         a.numbers[i] = a.numbers[a.length - i + 1];
         a.numbers[a.length - i + 1] = temp;
     }
-    while (a.numbers[1] == '0'){
+    while (a.numbers[1] == '0')
+    {
         for (int j = 1; j < a.length; j++)
         {
-            a.numbers[j] = a.numbers[j+1];
+            a.numbers[j] = a.numbers[j + 1];
         }
         a.numbers[a.length] = '\0';
         a.length--;
@@ -274,23 +276,24 @@ void updateSpace(BigInt &a, int &check)
         a.numbers[0] = ' ';
     }
     else
-    { //add space at a.numbers[0]
+    { // add space at a.numbers[0]
         for (int i = a.length + 1; i >= 0; i--)
-            {
-                a.numbers[i] = a.numbers[i - 1];
-            }
+        {
+            a.numbers[i] = a.numbers[i - 1];
+        }
         a.numbers[0] = ' ';
         a.numbers[a.length + 2] = '\0';
         a.length++;
     }
 }
 
-int isNumber (BigInt a){
-    if ((a.numbers[0]!= ' ' ) && (a.numbers[0]!= '-' ) && (a.numbers[0] < '0') && (a.numbers[0] > '9')){
+int isNumber(BigInt a)
+{
+    if ((a.numbers[0] != ' ') && (a.numbers[0] != '-') && (a.numbers[0] < '0') && (a.numbers[0] > '9'))
         return 0;
-    }
-    for(int i = 1; i < a.length; i++){
-        if ((a.numbers[i]< '0') || (a.numbers[i]> '9'))
+    for (int i = 1; i < a.length; i++)
+    {
+        if ((a.numbers[i] < '0') || (a.numbers[i] > '9'))
             return 0;
     }
     return 1;
