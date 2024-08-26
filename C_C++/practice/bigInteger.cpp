@@ -36,19 +36,19 @@ void updateSpace(BigInt &a, int &check);
 int main()
 {
     BigInt a = read();
-    // display(a);
+    display(a);
     BigInt b = read();
-    // display(b);
+    display(b);
     BigInt ad = initAdd(a, b);
     BigInt sub = initSubtract(a, b);
-    // printf("-----------------------------------------\n");
-    // printf("                  Result                 \n");
-    // printf("-----------------------------------------\n");
-    // printf("Sum a + b: %s\n", ad.numbers);
-    // printf("Subtract a - b: %s\n", sub.numbers);
-    // printf("-----------------------------------------");
-    printf("%s\n", ad.numbers);
-    printf("%s\n", sub.numbers);
+    printf("-----------------------------------------\n");
+    printf("                  Result                 \n");
+    printf("-----------------------------------------\n");
+    printf("Sum: a + b = %s\n", ad.numbers);
+    printf("Subtract: a - b = %s\n", sub.numbers);
+    printf("-----------------------------------------");
+    // printf("%s\n", ad.numbers);
+    // printf("%s\n", sub.numbers);
 }
 
 BigInt read()
@@ -57,7 +57,7 @@ BigInt read()
     BigInt newBigNumber;
     do {
     char numberArray[MAX_DIGITS]; // Array store number when input
-    // printf("Enter new numbers: ");
+    printf("Enter new numbers: ");
     scanf("%s", numberArray);
     newBigNumber.length = strlen(numberArray);
     newBigNumber.numbers = (char *)malloc(strlen(numberArray) * sizeof(char));

@@ -23,9 +23,6 @@ int main (){
     disPlay(a,n);
     printf("\n");
     bubbleSort(a,n);
-    
-    
-   
 }
 void disPlay (int a[], int n){
      for ( int i = 0; i < n; i++){
@@ -39,12 +36,18 @@ void  swap (int &a ,int &b){
 }
 void bubbleSort (int a[], int n){
     for ( int i = 0; i < n  ; i++){
-        for ( int j = 0; j < n - i - j; j ++ ){
-            if (a[j] > a [j + 1]){
+        int isSorted = 1;
+        for ( int j = 0; j < n - i - j; j ++ ){ //j - 1 < n - i => j < n - i - 1
+            if (a[j] > a [j + 1]){ // đưa số lớn ra sau
+                isSorted = 0;
                 swap ( a[j], a[j + 1]);
                 disPlay(a,n);
                 printf("\n");
             }
+        }
+        if(isSorted)
+        {
+            break;
         }
     }
 }
