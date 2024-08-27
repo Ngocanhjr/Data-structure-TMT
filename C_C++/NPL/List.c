@@ -52,6 +52,18 @@ void deleteAllValueOfx(ElementType x, List *pL);
 
 void demoDeleteAllValueOfx(ElementType x, List *pL);
 
+int checkNumber(List L);
+
+List oddList(List L); // le
+
+List evenList(List L); //chan
+
+void sortList(List *pL);
+
+void swap (ElementType *a , ElementType *b);
+
+void insertSortedList(ElementType x, List *pL);
+
 int main (){
 
     //1. Build a list L of n elements.
@@ -65,6 +77,19 @@ int main (){
     scanf("%d", &x);
     demoDeleteAllValueOfx(x,&newL);
     // deleteAllValueOfx(x,&newL);
+    printList(newL);
+    List L1 = oddList(newL);
+    List L2 = evenList(newL);
+    printf("Odd List: ");
+    printList(L1);
+    printf("Odd List: ");
+    printList(L2);
+    printf("Sorted list: ");
+    sortList(&newL);
+    printList(newL);
+    printf("Enter number u wanna insert: ");
+    scanf("%d", &x);
+    insertSortedList(x, &newL);
     printList(newL);
 }
 
@@ -84,7 +109,7 @@ List readList(){
 }
 
 void printList (List L){
-    if (isEmptyList){
+    if (isEmptyList(L)){
         printf("Empty list!");
         return;
     } 
@@ -140,7 +165,7 @@ void insertList(ElementType x, Position p, List *pL){
     } else 
     {
         Position q;
-        for (q = pL->last; q > p; q--)
+        for (q = pL->last; q >= p; q--)
         {
             pL->Element[q] = pL->Element[q - 1];
         }
@@ -197,7 +222,7 @@ void deleteAllValueOfx(ElementType x, List *pL){
 }
 
 void demoDeleteAllValueOfx(ElementType x, List *pL){
-    if (isEmptyList){
+    if (isEmptyList(*pL)){
         printf("Empty list!");
         return;
     } 
@@ -208,4 +233,77 @@ void demoDeleteAllValueOfx(ElementType x, List *pL){
             i--; // kiểm tra lại vị trí sau khi xoá
         }
     }
+}
+
+int checkNumber(int a){
+    if(a%2==0){
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+List oddList(List L){
+    List L1;
+    int count = 0;
+    for(int i = 0; i < L.last; i++){
+        if(!checkNumber(L.Element[i])){
+            L1.Element[count] = L.Element[i];
+            count ++;
+        }
+    }
+    L1.last = count ++;
+    return L1;
+}
+
+List evenList(List L){
+    List L2;
+    int count = 0;
+    for(int i = 0; i < L.last; i++){
+        if(checkNumber(L.Element[i])){
+            L2.Element[count] = L.Element[i];
+            count ++;
+        }
+    }
+    L2.last = count ++;
+    return L2;
+}
+
+void swap(ElementType *a , ElementType *b){
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void sortList(List *pL){
+    //Bubble sort
+    for (int i = 0; i < pL->last; i++){
+        int flag = 1;
+        for (int j = 0; j < pL->last - i - 1; j++){ 
+            if(pL->Element[j] > pL->Element[j + 1]){
+                flag = 0;
+                swap(&pL->Element[j],&pL->Element[j + 1]);
+            }
+        }
+        if(flag){
+            break;
+        }
+    }
+}
+
+void insertSortedList(ElementType x, List *pL){
+    int left = 0, right = pL->last - 1;
+    int res;
+    //tim vi tri dau tien lon hon hoac bang x
+    while (left <= right){
+        int mid = (left + right)/2;
+        if(pL->Element[mid] >= x){
+            res = mid;
+            right = mid - 1;
+        } else
+        {
+            left = mid + 1;
+        }
+    }
+    insertList(x,res + 1,pL);
 }

@@ -42,13 +42,17 @@ int main()
     BigInt ad = initAdd(a, b);
     BigInt sub = initSubtract(a, b);
     printf("-----------------------------------------\n");
-    printf("                  Result                 \n");
+    printf("                  Result                  \n");
     printf("-----------------------------------------\n");
     printf("Sum: a + b = %s\n", ad.numbers);
     printf("Subtract: a - b = %s\n", sub.numbers);
     printf("-----------------------------------------");
     // printf("%s\n", ad.numbers);
     // printf("%s\n", sub.numbers);
+    free(a.numbers);
+    free(b.numbers);
+    free(ad.numbers);
+    free(sub.numbers);
 }
 
 BigInt read()
